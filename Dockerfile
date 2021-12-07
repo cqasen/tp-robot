@@ -1,4 +1,14 @@
-FROM php:7.4-cli
+FROM php:7.4-fpm
+RUN apt-get update && apt-get install -y \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libpng-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) gd
+
+RUN curl -sS https://getcomposer.org/installer | php \
+  && chmod +x composer.phar && mv composer.phar /usr/local/bin/composer
+
 COPY . /usr/src/myapp
 WORKDIR /usr/src/myapp
 
