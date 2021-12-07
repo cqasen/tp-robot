@@ -3,6 +3,8 @@
 namespace app\controller;
 
 use app\BaseController;
+use app\dto\ChatbotReplyDto;
+use app\logic\DingtalkUtil;
 use think\facade\Log;
 
 class Reply extends BaseController
@@ -14,6 +16,11 @@ class Reply extends BaseController
 		print_r($raw_post_data);
 		Log::write('Reply', 'notice');
 		Log::write($raw_post_data, 'notice');
-
+		$dto              = ChatbotReplyDto::newInstance($raw_post_data);
+		$userIds[]        = $dto->getSenderStaffId();
+		$conversationType = $dto->getConversationType() === 2 ? '群聊' : '单聊';
+		$message          = sprintf('[%s]你于[%s]发送的消息为：%s', $conversationType, date('Y-m-d H:i:s', $dto->getCreateAt()),
+			$dto->getText()['content']);
+		DingtalkUtil::newInstance()->batchSend($userIds, $message);
 	}
 }
