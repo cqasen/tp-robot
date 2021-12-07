@@ -10,4 +10,6 @@
 // +----------------------------------------------------------------------
 use think\facade\Route;
 
-Route::any('reply', 'Index/reply')->allowCrossDomain();
+Route::get('/', 'Index/index')->allowCrossDomain();
+Route::get('/reply', 'Reply/index')->allowCrossDomain();
+Route::get('/oss/sign', 'Oss/getSign')->allowCrossDomain();

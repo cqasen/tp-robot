@@ -56,11 +56,4 @@ class Index extends BaseController
 			print_r(sprintf(":%s", $e->getMessage()));
 		}
 	}
-
-	public function reply()
-	{
-		echo "<pre>";
-		$raw_post_data = file_get_contents('php://input', 'r');
-		print_r($raw_post_data);
-	}
 }
