@@ -17,3 +17,5 @@ WORKDIR /usr/src/myapp
 RUN composer update -v --no-dev
 
 #CMD [ "php", "./public/index.php" ]
+EXPOSE 9000
+CMD ["php-fpm"]
