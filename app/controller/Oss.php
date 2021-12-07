@@ -41,6 +41,6 @@ class Oss extends BaseController
 		$response['expire']    = $end;
 		$response['dir']       = $dir;  // 这个参数是设置用户上传文件时指定的前缀。
 
-		return json($response);
+		return $this->responseJson($response);
 	}
 }
