@@ -1,0 +1,56 @@
+name: Docker Image CI
+on:
+  push:
+    branches: [release]
+  pull_request:
+    branches: [release]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Login to docker hub
+        uses: actions-hub/docker/login@master
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Build :latest
+        if: success()
+        run: docker build -t ${{ secrets.DOCKER_REPOSITORY }}:latest .
+
+      - name: Push to docker hub :latest
+        uses: actions-hub/docker@master
+        if: success()
+        with:
+          args: push ${{ secrets.DOCKER_REPOSITORY }}:latest
+  pull-docker: # docker部署
+    needs: [build]
+    name: Pull Docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }} # 服务器ip
+          username: ${{ secrets.HOST_USERNAME }} # 服务器登录用户名
+          key: ${{ secrets.HOST_KEY }} # 服务器登录密码
+          port: ${{ secrets.HOST_PORT }} # 服务器ssh端口
+          script: |
+            pwd
+            ls -al
+            pwd
+            # 停止旧版容器
+            sudo docker ps -a --filter name=${{ secrets.DOCKER_NAME }} -q|sudo xargs docker stop
+            # 删除旧版容器
+            sudo docker ps -a --filter name=${{ secrets.DOCKER_NAME }} -q|sudo xargs docker rm
+            # 登录镜像服务器
+            sudo docker login --username=${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_PASSWORD }}
+            # 拉取最新latest版本镜像
+            sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}:latest
+            # 运行最新latest版本镜像
+            sudo docker run -d --name ${{ secrets.DOCKER_NAME }} --net tx -p 8088:80 ${{ secrets.DOCKER_REPOSITORY }}:latest
+            # 删除废弃的images
+            sudo docker rmi -f $(sudo docker images | grep "<none>" | awk '{print $3}')
