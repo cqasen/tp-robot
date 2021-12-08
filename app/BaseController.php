@@ -92,7 +92,7 @@ abstract class BaseController
 		return $v->failException(true)->check($data);
 	}
 
-	public function responseJson($data, $code = 200, $message = '成功', $httpStatus = 200)
+	public function responseJson($data = [], $code = 200, $message = '成功', $httpStatus = 200)
 	{
 		$return                = [];
 		$return['status_code'] = $code;
