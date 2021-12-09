@@ -45,7 +45,8 @@ class Reply extends BaseController
 }';
 
 		$dto       = ChatbotReplyDto::newInstance($params);
-		$userIds[] = $dto->getSenderStaffId() ?: "054632473136322716";
+//		$userIds[] = $dto->getSenderStaffId() ?: "054632473136322716";
+		$userIds[] = $dto->getSenderId();
 		$url       = $dto->getSessionWebhook();
 		try {
 			$turingapi = "http://openapi.turingapi.com/openapi/api/v2";
