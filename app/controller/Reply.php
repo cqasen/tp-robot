@@ -66,7 +66,12 @@ class Reply extends BaseController
 			$content   = json_decode($resp->getBody()->getContents(), true);
 
 			foreach ($content['results'] as $item) {
-				$message = $item['values']['text'] ?? '抱歉呢，没有理解你说的';
+				if (($content['intent']['code'] ?? 0) == 1003) {
+					$message = sprintf('你于[%s]发送的消息为：%s', date('Y-m-d H:i:s', $dto->getCreateAt() / 1000),
+						$dto->getText()['content'] ?? '');
+				} else {
+					$message = $item['values']['text'] ?? '抱歉呢，没有理解你说的';
+				}
 				$this->sendReply($url, $message, $userIds);
 			}
 		} catch (\Throwable $e) {

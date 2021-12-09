@@ -9,7 +9,7 @@ use GuzzleHttp\Client;
 
 class Index extends BaseController
 {
-	public function index()
+	public function index1()
 	{
 		$url      = "http://openapi.turingapi.com/openapi/api/v2";
 		$client   = new Client();
@@ -27,14 +27,16 @@ class Index extends BaseController
 		];
 		$resp     = $client->post($url, ['json' => $jsonData]);
 		echo '<pre>';
-		$content = json_decode($resp->getBody()->getContents(),true);
+		$content = json_decode($resp->getBody()->getContents(), true);
+		print_r($resp->getStatusCode());
 		print_r($content);
+
 		foreach ($content['results'] as $item) {
 			$item['values']['text'];
 		}
 	}
 
-	public function index1()
+	public function index()
 	{
 		$userIds   = ["054632473136322716"];
 		$robotCode = "dingpekecjsl8bjfiy2u";
