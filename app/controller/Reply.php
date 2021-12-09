@@ -22,16 +22,14 @@ class Reply extends BaseController
 //		echo "<pre>";
         $raw_post_data = file_get_contents('php://input', 'r');
 //		print_r($raw_post_data);
-        Log::write('Reply', 'notice');
-        Log::write($raw_post_data, 'notice');
+
 
         $params = $this->is_json($raw_post_data) ? json_decode($raw_post_data, true) : [];
-//
+        Log::write($raw_post_data, 'notice', $params);
 //		$s      = ' {"conversationId":"cidslUbes2wg1RUOkAM7Ky0BA==","atUsers":[{"dingtalkId":"$:LWCP_v1:$K42eHOm8++kOBHyyBiNVLQqI4W7KQzSV"}],"chatbotCorpId":"ding5b06cf33b246469235c2f4657eb6378f","chatbotUserId":"$:LWCP_v1:$K42eHOm8++kOBHyyBiNVLQqI4W7KQzSV","msgId":"msgmwAH1b2eCUKS+XIORAPtNQ==","senderNick":"森","isAdmin":true,"senderStaffId":"054632473136322716","sessionWebhookExpiredTime":1638974911889,"createAt":1638969511621,"senderCorpId":"ding5b06cf33b246469235c2f4657eb6378f","conversationType":"2","senderId":"$:LWCP_v1:$hnDL6J3jSFO1+VXckD8/zQ==","conversationTitle":"机器人-TEST","isInAtList":true,"sessionWebhook":"https://oapi.dingtalk.com/robot/sendBySession?session=7c22be0369674062ac1f719114c9ced9","text":{"content":"[忍者] "},"robotCode":"dingidpy5p1nj0lknlbq","msgtype":"text"}';
 //		$params = json_decode($s, true);
 //		print_r($params);
-        $dto = ChatbotReplyDto::newInstance($params);
-        Log::write($raw_post_data, 'notice', $dto->toArray());
+        $dto       = ChatbotReplyDto::newInstance($params);
         $robotCode = 'dingpekecjsl8bjfiy2u';
         $userIds[] = $dto->getSenderStaffId() ?? "054632473136322716";
         if ($dto->getConversationType() == 2) {
@@ -82,9 +80,10 @@ class Reply extends BaseController
 
 详情查看：[浏览器打开](https://www.epet.com/) [钉钉打开](https://www.epet.com/)
 EOF
-,
+                ,
             ];
             $req->msgParam  = (string)json_encode($msgParam);
+            Log::write('通知的人', 'notice', $userIds);
             DingtalkUtil::newInstance()->batchSend($req);
         }
         return $this->responseJson();
