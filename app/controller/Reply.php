@@ -50,61 +50,79 @@ class Reply extends BaseController
 		$dto       = ChatbotReplyDto::newInstance($params);
 		$robotCode = $dto->getRobotCode() ?: 'dingpekecjsl8bjfiy2u';
 		$userIds[] = $dto->getSenderStaffId() ?: "054632473136322716";
-		if ($dto->getConversationType() == 2) {
-			//群聊
-			$client   = new Client();
-			$message  = sprintf('你于[%s]发送的消息为：%s', date('Y-m-d H:i:s', $dto->getCreateAt() / 1000),
-				$dto->getText()['content'] ?? '');
-			$jsonData = [
-				'msgtype' => 'text',
-				'text'    => [
-					'content' => $message,
-				],
-				'at'      => [
-					'atMobiles' => [],
-					'atUserIds' => $userIds,
-					'isAtAll'   => false,
-				],
-			];
-			$resp     = $client->post($dto->getSessionWebhook(), ['json' => $jsonData]);
-		} else {
-			//单聊
-			$message = sprintf('你于[%s]发送的消息为：%s', date('Y-m-d H:i:s', $dto->getCreateAt() / 1000),
-				$dto->getText()['content'] ?? '');
 
-			$req = new BatchSendOTORequest();
+		//群聊
+		$client   = new Client();
+		$message  = sprintf('你于[%s]发送的消息为：%s', date('Y-m-d H:i:s', $dto->getCreateAt() / 1000),
+			$dto->getText()['content'] ?? '');
+		$jsonData = [
+			'msgtype' => 'text',
+			'text'    => [
+				'content' => $message,
+			],
+			'at'      => [
+				'atMobiles' => [],
+				'atUserIds' => $userIds,
+				'isAtAll'   => false,
+			],
+		];
+		$resp     = $client->post($dto->getSessionWebhook(), ['json' => $jsonData]);
 
-			$req->robotCode = $robotCode;
-			$req->userIds   = $userIds;    //通过手机号获取userId
-			$req->msgKey    = "officialMarkdownMsg";
-			$date           = date('Y-m-d H:i:s', $dto->getCreateAt() / 1000);
-			$msgParam       = [
-				"title" => '工单消息通知',
-				"text"  => <<<EOF
-<font color=#349805 >【工单消息通知】</font>
-
-您创建的工单已经开始处理！
-
-工单号：Q20210719003
-
-优先级： <font color=#EB2424 >紧急</font>
-
-分类：技术-订单
-
-主题：订单创建推送仓库之后，仓库人员无法查询。
-
-操作人：测试人员A
-
-当前时间：{$date}
-
-详情查看：[浏览器打开](https://www.epet.com/) [钉钉打开](https://www.epet.com/)
-EOF
-				,
-			];
-			$req->msgParam  = (string)json_encode($msgParam);
-			Log::write('通知的人', 'notice', $userIds);
-			DingtalkUtil::newInstance()->batchSend($req);
-		}
+//		if ($dto->getConversationType() == 2) {
+//			//群聊
+//			$client   = new Client();
+//			$message  = sprintf('你于[%s]发送的消息为：%s', date('Y-m-d H:i:s', $dto->getCreateAt() / 1000),
+//				$dto->getText()['content'] ?? '');
+//			$jsonData = [
+//				'msgtype' => 'text',
+//				'text'    => [
+//					'content' => $message,
+//				],
+//				'at'      => [
+//					'atMobiles' => [],
+//					'atUserIds' => $userIds,
+//					'isAtAll'   => false,
+//				],
+//			];
+//			$resp     = $client->post($dto->getSessionWebhook(), ['json' => $jsonData]);
+//		} else {
+//			//单聊
+//			$message = sprintf('你于[%s]发送的消息为：%s', date('Y-m-d H:i:s', $dto->getCreateAt() / 1000),
+//				$dto->getText()['content'] ?? '');
+//
+//			$req = new BatchSendOTORequest();
+//
+//			$req->robotCode = $robotCode;
+//			$req->userIds   = $userIds;    //通过手机号获取userId
+//			$req->msgKey    = "officialMarkdownMsg";
+//			$date           = date('Y-m-d H:i:s', $dto->getCreateAt() / 1000);
+//			$msgParam       = [
+//				"title" => '工单消息通知',
+//				"text"  => <<<EOF
+//<font color=#349805 >【工单消息通知】</font>
+//
+//您创建的工单已经开始处理！
+//
+//工单号：Q20210719003
+//
+//优先级： <font color=#EB2424 >紧急</font>
+//
+//分类：技术-订单
+//
+//主题：订单创建推送仓库之后，仓库人员无法查询。
+//
+//操作人：测试人员A
+//
+//当前时间：{$date}
+//
+//详情查看：[浏览器打开](https://www.epet.com/) [钉钉打开](https://www.epet.com/)
+//EOF
+//				,
+//			];
+//			$req->msgParam  = (string)json_encode($msgParam);
+//			Log::write('通知的人', 'notice', $userIds);
+//			DingtalkUtil::newInstance()->batchSend($req);
+//		}
 		return $this->responseJson();
 
 	}
