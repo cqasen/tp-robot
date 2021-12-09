@@ -65,7 +65,24 @@ class Reply extends BaseController
             $req->msgKey    = "officialMarkdownMsg";
             $msgParam       = [
                 "text"  => $message,
-                "title" => $message,
+                "title" => <<<EOF
+<font color=#349805 >【工单消息通知】</font>
+
+您创建的工单已经开始处理！
+
+工单号：Q20210719003
+
+优先级： <font color=#EB2424 >紧急</font>
+
+分类：技术-订单
+
+主题：订单创建推送仓库之后，仓库人员无法查询。
+
+操作人：测试人员A
+
+详情查看：[浏览器打开](https://www.epet.com/) [钉钉打开](https://www.epet.com/)
+EOF
+,
             ];
             $req->msgParam  = (string)json_encode($msgParam);
             DingtalkUtil::newInstance()->batchSend($req);
