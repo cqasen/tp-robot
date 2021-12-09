@@ -5,10 +5,36 @@ namespace app\controller;
 use AlibabaCloud\SDK\Dingtalk\Vrobot_1_0\Models\BatchSendOTORequest;
 use app\BaseController;
 use app\logic\DingtalkUtil;
+use GuzzleHttp\Client;
 
 class Index extends BaseController
 {
 	public function index()
+	{
+		$url      = "http://openapi.turingapi.com/openapi/api/v2";
+		$client   = new Client();
+		$jsonData = [
+			'reqType'    => 0,
+			'perception' => [
+				'inputText' => [
+					'text' => '你好呀',
+				],
+			],
+			'userInfo'   => [
+				'apiKey' => 'e6425b8d1cfb40ec8a713c989b6faaa9',
+				'userId' => '11111111',
+			],
+		];
+		$resp     = $client->post($url, ['json' => $jsonData]);
+		echo '<pre>';
+		$content = json_decode($resp->getBody()->getContents(),true);
+		print_r($content);
+		foreach ($content['results'] as $item) {
+			$item['values']['text'];
+		}
+	}
+
+	public function index1()
 	{
 		$userIds   = ["054632473136322716"];
 		$robotCode = "dingpekecjsl8bjfiy2u";
