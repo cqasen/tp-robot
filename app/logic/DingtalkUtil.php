@@ -21,8 +21,10 @@ class DingtalkUtil
 		$config                           = new Config([]);
 		$config->protocol                 = "https";
 		$getAccessTokenRequest            = new GetAccessTokenRequest();
-		$getAccessTokenRequest->appKey    = 'dingdoludk41g62ffoov';
-		$getAccessTokenRequest->appSecret = 'Rol0B6_5JuBRv1KQ7g9Gf0-MaZCoQElG4c-5KR5UMOw7Okr7oE97tXRiLNSmylu3';
+//		$getAccessTokenRequest->appKey    = 'dingdoludk41g62ffoov';
+//		$getAccessTokenRequest->appSecret = 'Rol0B6_5JuBRv1KQ7g9Gf0-MaZCoQElG4c-5KR5UMOw7Okr7oE97tXRiLNSmylu3';
+        $getAccessTokenRequest->appKey    = 'dingpekecjsl8bjfiy2u';
+		$getAccessTokenRequest->appSecret = 'lOirAO9m2ox4fAMHVu7E64abhvbMBGdrsMTJxdJ2ZYQ6xxw4dwHcsVwxy2Le7a_S';
 
 		$client = new Dingtalk($config);
 		try {
