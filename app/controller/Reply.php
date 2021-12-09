@@ -56,7 +56,7 @@ class Reply extends BaseController
         } else {
             //单聊
             $message = sprintf('你于[%s]发送的消息为：%s', date('Y-m-d H:i:s', $dto->getCreateAt() / 1000),
-                $dto->getText()['content']);
+                $dto->getText()['content'] ?? '');
 
             $req = new BatchSendOTORequest();
 
@@ -64,7 +64,7 @@ class Reply extends BaseController
             $req->userIds   = $userIds;    //通过手机号获取userId
             $req->msgKey    = "officialMarkdownMsg";
             $msgParam       = [
-                "text"  => $message,
+                "text"  => '工单消息通知',
                 "title" => <<<EOF
 <font color=#349805 >【工单消息通知】</font>
 
