@@ -48,7 +48,7 @@ class Reply extends BaseController
 //		$params = json_decode($s, true);
 //		print_r($params);
 		$dto       = ChatbotReplyDto::newInstance($params);
-		$robotCode = 'dingpekecjsl8bjfiy2u';
+		$robotCode = $dto->getRobotCode() ?: 'dingpekecjsl8bjfiy2u';
 		$userIds[] = $dto->getSenderStaffId() ?: "054632473136322716";
 		if ($dto->getConversationType() == 2) {
 			//群聊
