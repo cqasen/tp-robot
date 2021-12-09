@@ -79,6 +79,7 @@ class Reply extends BaseController
             $req->robotCode = $robotCode;
             $req->userIds   = $userIds;    //通过手机号获取userId
             $req->msgKey    = "officialMarkdownMsg";
+            $date = $dto->getCreateAt() / 1000;
             $msgParam       = [
                 "title" => '工单消息通知',
                 "text"  => <<<EOF
@@ -95,6 +96,8 @@ class Reply extends BaseController
 主题：订单创建推送仓库之后，仓库人员无法查询。
 
 操作人：测试人员A
+
+当前时间：{$date}
 
 详情查看：[浏览器打开](https://www.epet.com/) [钉钉打开](https://www.epet.com/)
 EOF
