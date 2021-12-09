@@ -59,7 +59,7 @@ class Reply extends BaseController
 				],
 				'userInfo'   => [
 					'apiKey' => 'e6425b8d1cfb40ec8a713c989b6faaa9',
-					'userId' => $dto->getSenderStaffId(),
+					'userId' => md5($dto->getSenderStaffId()),
 				],
 			];
 			$resp      = $client->post($turingapi, ['json' => $jsonData]);
