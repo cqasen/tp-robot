@@ -11,21 +11,21 @@ use think\facade\Log;
 
 class Reply extends BaseController
 {
-    public function is_json($string)
-    {
-        json_decode($string);
-        return (json_last_error() === JSON_ERROR_NONE);
-    }
+	public function is_json($string)
+	{
+		json_decode($string);
+		return (json_last_error() === JSON_ERROR_NONE);
+	}
 
-    public function index()
-    {
+	public function index()
+	{
 //		echo "<pre>";
-        $raw_post_data = file_get_contents('php://input', 'r');
+		$raw_post_data = file_get_contents('php://input', 'r');
 //		print_r($raw_post_data);
 
-        $params = $this->is_json($raw_post_data) ? json_decode($raw_post_data, true) : [];
-        Log::write($raw_post_data, 'notice', $params);
-        $s = '{
+		$params = $this->is_json($raw_post_data) ? json_decode($raw_post_data, true) : [];
+		Log::write($raw_post_data, 'notice', $params);
+		$s = '{
 	"conversationId": "cidCw9/y/XHOFrDYUrmJ90HfHEYGVSm7Zpv3Q435p+55rY=",
 	"chatbotCorpId": "ding3cfda54ade83516bf2c783f7214b6d69",
 	"chatbotUserId": "$:LWCP_v1:$Q/1KdmazjrZaVEfMW7fBR7onFhlcKnh1",
@@ -47,42 +47,40 @@ class Reply extends BaseController
 }';
 //		$params = json_decode($s, true);
 //		print_r($params);
-        $dto       = ChatbotReplyDto::newInstance($params);
-        $robotCode = 'dingpekecjsl8bjfiy2u';
-        $userIds[] = $dto->getSenderStaffId() ?: "054632473136322716";
-        if ($dto->getConversationType() == 2) {
-            //群聊
-            $client   = new Client();
-            $message  = sprintf('你于[%s]发送的消息为：%s', date('Y-m-d H:i:s', $dto->getCreateAt() / 1000),
-                $dto->getText()['content'] ?? '');
-            $jsonData = [
-                'msgtype' => 'text',
-                'text'    => [
-                    'content' => $message,
-                ],
-                'at'      => [
-                    'atMobiles' => [],
-                    'atUserIds' => [
-                        $dto->getSenderStaffId(),
-                    ],
-                    'isAtAll'   => false,
-                ],
-            ];
-            $resp     = $client->post($dto->getSessionWebhook(), ['json' => $jsonData]);
-        } else {
-            //单聊
-            $message = sprintf('你于[%s]发送的消息为：%s', date('Y-m-d H:i:s', $dto->getCreateAt() / 1000),
-                $dto->getText()['content'] ?? '');
+		$dto       = ChatbotReplyDto::newInstance($params);
+		$robotCode = 'dingpekecjsl8bjfiy2u';
+		$userIds[] = $dto->getSenderStaffId() ?: "054632473136322716";
+		if ($dto->getConversationType() == 2) {
+			//群聊
+			$client   = new Client();
+			$message  = sprintf('你于[%s]发送的消息为：%s', date('Y-m-d H:i:s', $dto->getCreateAt() / 1000),
+				$dto->getText()['content'] ?? '');
+			$jsonData = [
+				'msgtype' => 'text',
+				'text'    => [
+					'content' => $message,
+				],
+				'at'      => [
+					'atMobiles' => [],
+					'atUserIds' => $userIds,
+					'isAtAll'   => false,
+				],
+			];
+			$resp     = $client->post($dto->getSessionWebhook(), ['json' => $jsonData]);
+		} else {
+			//单聊
+			$message = sprintf('你于[%s]发送的消息为：%s', date('Y-m-d H:i:s', $dto->getCreateAt() / 1000),
+				$dto->getText()['content'] ?? '');
 
-            $req = new BatchSendOTORequest();
+			$req = new BatchSendOTORequest();
 
-            $req->robotCode = $robotCode;
-            $req->userIds   = $userIds;    //通过手机号获取userId
-            $req->msgKey    = "officialMarkdownMsg";
-            $date = $dto->getCreateAt() / 1000;
-            $msgParam       = [
-                "title" => '工单消息通知',
-                "text"  => <<<EOF
+			$req->robotCode = $robotCode;
+			$req->userIds   = $userIds;    //通过手机号获取userId
+			$req->msgKey    = "officialMarkdownMsg";
+			$date           = date('Y-m-d H:i:s', $dto->getCreateAt() / 1000);
+			$msgParam       = [
+				"title" => '工单消息通知',
+				"text"  => <<<EOF
 <font color=#349805 >【工单消息通知】</font>
 
 您创建的工单已经开始处理！
@@ -101,13 +99,13 @@ class Reply extends BaseController
 
 详情查看：[浏览器打开](https://www.epet.com/) [钉钉打开](https://www.epet.com/)
 EOF
-                ,
-            ];
-            $req->msgParam  = (string)json_encode($msgParam);
-            Log::write('通知的人', 'notice', $userIds);
-            DingtalkUtil::newInstance()->batchSend($req);
-        }
-        return $this->responseJson();
+				,
+			];
+			$req->msgParam  = (string)json_encode($msgParam);
+			Log::write('通知的人', 'notice', $userIds);
+			DingtalkUtil::newInstance()->batchSend($req);
+		}
+		return $this->responseJson();
 
-    }
+	}
 }
