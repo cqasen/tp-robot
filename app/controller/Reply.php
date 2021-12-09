@@ -66,7 +66,7 @@ class Reply extends BaseController
 			$content   = json_decode($resp->getBody()->getContents(), true);
 
 			foreach ($content['results'] as $item) {
-				if (($content['intent']['code'] ?? 0) == 1003) {
+				if (($content['intent']['code'] ?? 0) == 4003) {
 					$message = sprintf('你于[%s]发送的消息为：%s', date('Y-m-d H:i:s', $dto->getCreateAt() / 1000),
 						$dto->getText()['content'] ?? '');
 				} else {
