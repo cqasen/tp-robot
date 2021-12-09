@@ -33,7 +33,7 @@ class Reply extends BaseController
         $dto = ChatbotReplyDto::newInstance($params);
         Log::write($raw_post_data, 'notice', $dto->toArray());
         $robotCode = 'dingpekecjsl8bjfiy2u';
-        $userIds[] = $dto->getSenderStaffId();
+        $userIds[] = $dto->getSenderStaffId() ?? "054632473136322716";
         if ($dto->getConversationType() == 2) {
             //群聊
             $client   = new Client();
