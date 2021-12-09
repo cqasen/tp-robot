@@ -5,13 +5,12 @@ namespace app\controller;
 use AlibabaCloud\SDK\Dingtalk\Vrobot_1_0\Models\BatchSendOTORequest;
 use app\BaseController;
 use app\logic\DingtalkUtil;
-use Throwable;
 
 class Index extends BaseController
 {
-	public function index()
-	{
-        $userIds = ["054632473136322716"];
+    public function index()
+    {
+        $userIds   = ["054632473136322716"];
         $robotCode = "dingpekecjsl8bjfiy2u";
 
         $req = new BatchSendOTORequest();
@@ -20,8 +19,8 @@ class Index extends BaseController
         $req->userIds   = $userIds;    //通过手机号获取userId
         $req->msgKey    = "officialMarkdownMsg";
         $msgParam       = [
-            "text"  => '工单消息通知',
-            "title" => <<<EOF
+            "title" => '工单消息通知',
+            "text"  => <<<EOF
 <font color=#349805 >【工单消息通知】</font>
 
 您创建的工单已经开始处理！
@@ -42,5 +41,6 @@ EOF
         ];
         $req->msgParam  = (string)json_encode($msgParam);
         DingtalkUtil::newInstance()->batchSend($req);
-	}
+        return $this->responseJson();
+    }
 }

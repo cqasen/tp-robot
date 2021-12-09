@@ -23,20 +23,38 @@ class Reply extends BaseController
         $raw_post_data = file_get_contents('php://input', 'r');
 //		print_r($raw_post_data);
 
-
         $params = $this->is_json($raw_post_data) ? json_decode($raw_post_data, true) : [];
         Log::write($raw_post_data, 'notice', $params);
-//		$s      = ' {"conversationId":"cidslUbes2wg1RUOkAM7Ky0BA==","atUsers":[{"dingtalkId":"$:LWCP_v1:$K42eHOm8++kOBHyyBiNVLQqI4W7KQzSV"}],"chatbotCorpId":"ding5b06cf33b246469235c2f4657eb6378f","chatbotUserId":"$:LWCP_v1:$K42eHOm8++kOBHyyBiNVLQqI4W7KQzSV","msgId":"msgmwAH1b2eCUKS+XIORAPtNQ==","senderNick":"森","isAdmin":true,"senderStaffId":"054632473136322716","sessionWebhookExpiredTime":1638974911889,"createAt":1638969511621,"senderCorpId":"ding5b06cf33b246469235c2f4657eb6378f","conversationType":"2","senderId":"$:LWCP_v1:$hnDL6J3jSFO1+VXckD8/zQ==","conversationTitle":"机器人-TEST","isInAtList":true,"sessionWebhook":"https://oapi.dingtalk.com/robot/sendBySession?session=7c22be0369674062ac1f719114c9ced9","text":{"content":"[忍者] "},"robotCode":"dingidpy5p1nj0lknlbq","msgtype":"text"}';
+        $s = '{
+	"conversationId": "cidCw9/y/XHOFrDYUrmJ90HfHEYGVSm7Zpv3Q435p+55rY=",
+	"chatbotCorpId": "ding3cfda54ade83516bf2c783f7214b6d69",
+	"chatbotUserId": "$:LWCP_v1:$Q/1KdmazjrZaVEfMW7fBR7onFhlcKnh1",
+	"msgId": "msgEno58HmgtKvZlXdoD86q0g==",
+	"senderNick": "森",
+	"isAdmin": true,
+	"senderStaffId": "054632473136322716",
+	"sessionWebhookExpiredTime": 1639049867594,
+	"createAt": 1639044467345,
+	"senderCorpId": "ding3cfda54ade83516bf2c783f7214b6d69",
+	"conversationType": "1",
+	"senderId": "$:LWCP_v1:$hnDL6J3jSFO1+VXckD8/zQ==",
+	"sessionWebhook": "https://oapi.dingtalk.com/robot/sendBySession?session=fade1c4bc8a37e4b1a27ce969e8029ff",
+	"text": {
+		"content": "11"
+	},
+	"robotCode": "dingpekecjsl8bjfiy2u",
+	"msgtype": "text"
+}';
 //		$params = json_decode($s, true);
 //		print_r($params);
         $dto       = ChatbotReplyDto::newInstance($params);
         $robotCode = 'dingpekecjsl8bjfiy2u';
-        $userIds[] = $dto->getSenderStaffId() ?? "054632473136322716";
+        $userIds[] = $dto->getSenderStaffId() ?: "054632473136322716";
         if ($dto->getConversationType() == 2) {
             //群聊
             $client   = new Client();
             $message  = sprintf('你于[%s]发送的消息为：%s', date('Y-m-d H:i:s', $dto->getCreateAt() / 1000),
-                $dto->getText()['content']);
+                $dto->getText()['content'] ?? '');
             $jsonData = [
                 'msgtype' => 'text',
                 'text'    => [
@@ -62,8 +80,8 @@ class Reply extends BaseController
             $req->userIds   = $userIds;    //通过手机号获取userId
             $req->msgKey    = "officialMarkdownMsg";
             $msgParam       = [
-                "text"  => '工单消息通知',
-                "title" => <<<EOF
+                "title" => '工单消息通知',
+                "text"  => <<<EOF
 <font color=#349805 >【工单消息通知】</font>
 
 您创建的工单已经开始处理！
