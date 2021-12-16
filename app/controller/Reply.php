@@ -23,7 +23,7 @@ class Reply extends BaseController
 
 		$params = $this->is_json($raw_post_data) ? json_decode($raw_post_data, true) : [];
 		Log::write($raw_post_data, 'notice', $params);
-		Log::write('获取header值', 'notice', $_SERVER);
+		Log::write($_SERVER, 'notice');
 		$s = '{
 	"conversationId": "cidCw9/y/XHOFrDYUrmJ90HfHEYGVSm7Zpv3Q435p+55rY=",
 	"chatbotCorpId": "ding3cfda54ade83516bf2c783f7214b6d69",
