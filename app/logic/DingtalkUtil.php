@@ -14,52 +14,50 @@ use Throwable;
 
 class DingtalkUtil
 {
-	use NewInstanceTrait;
+    use NewInstanceTrait;
 
-	public function getAccessToken()
-	{
-		$config                           = new Config([]);
-		$config->protocol                 = "https";
-		$getAccessTokenRequest            = new GetAccessTokenRequest();
-//		$getAccessTokenRequest->appKey    = 'dingdoludk41g62ffoov';
-//		$getAccessTokenRequest->appSecret = 'Rol0B6_5JuBRv1KQ7g9Gf0-MaZCoQElG4c-5KR5UMOw7Okr7oE97tXRiLNSmylu3';
-        $getAccessTokenRequest->appKey    = 'dingpekecjsl8bjfiy2u';
-		$getAccessTokenRequest->appSecret = 'lOirAO9m2ox4fAMHVu7E64abhvbMBGdrsMTJxdJ2ZYQ6xxw4dwHcsVwxy2Le7a_S';
+    public function getAccessToken()
+    {
+        $config                           = new Config([]);
+        $config->protocol                 = "https";
+        $getAccessTokenRequest            = new GetAccessTokenRequest();
+        $getAccessTokenRequest->appKey    = 'dingidpy5p1nj0lknlbq';
+        $getAccessTokenRequest->appSecret = 'zUm5-mqD6amYeykQRghfnqATwjpoYvoQTGYyvnIbb7b3uFHPYj6zAc1XARUnb2CV';
 
-		$client = new Dingtalk($config);
-		try {
-			$resp        = $client->getAccessToken($getAccessTokenRequest);
-			$accessToken = $resp->body->accessToken;
-		} catch (Throwable $e) {
-			Log::error($e->getMessage());
-			throw $e;
-		}
-		return $accessToken;
-	}
+        $client = new Dingtalk($config);
+        try {
+            $resp        = $client->getAccessToken($getAccessTokenRequest);
+            $accessToken = $resp->body->accessToken;
+        } catch (Throwable $e) {
+            Log::error($e->getMessage());
+            throw $e;
+        }
+        return $accessToken;
+    }
 
-	/**
-	 * @param BatchSendOTORequest $req
-	 * @return bool
-	 * @throws Throwable
-	 *
-	 */
-	public function batchSend(BatchSendOTORequest $req)
-	{
-		try {
-			$accessToken = $this->getAccessToken();
+    /**
+     * @param BatchSendOTORequest $req
+     * @return bool
+     * @throws Throwable
+     *
+     */
+    public function batchSend(BatchSendOTORequest $req)
+    {
+        try {
+            $accessToken = $this->getAccessToken();
 
-			$config                          = new Config([]);
-			$config->protocol                = "https";
-			$client                          = new \AlibabaCloud\SDK\Dingtalk\Vrobot_1_0\Dingtalk($config);
-			$header                          = new BatchSendOTOHeaders();
-			$header->xAcsDingtalkAccessToken = $accessToken;
-			$runtime                         = new RuntimeOptions([]);
-			$client->batchSendOTOWithOptions($req, $header, $runtime);
-		} catch (Throwable $e) {
-			Log::error($e->getMessage());
-			throw $e;
-		}
-		return true;
+            $config                          = new Config([]);
+            $config->protocol                = "https";
+            $client                          = new \AlibabaCloud\SDK\Dingtalk\Vrobot_1_0\Dingtalk($config);
+            $header                          = new BatchSendOTOHeaders();
+            $header->xAcsDingtalkAccessToken = $accessToken;
+            $runtime                         = new RuntimeOptions([]);
+            $client->batchSendOTOWithOptions($req, $header, $runtime);
+        } catch (Throwable $e) {
+            Log::error($e->getMessage());
+            throw $e;
+        }
+        return true;
 
-	}
+    }
 }
