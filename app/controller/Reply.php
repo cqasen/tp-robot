@@ -28,7 +28,7 @@ class Reply extends BaseController
         //sign 与计算的结果不一致，则认为是非法的请求。
         $timestamp    = time() * 1000;
         $stringToSign = $_SERVER['HTTP_TIMESTAMP'] . "\n" . $appSecret;
-        $signRes      = hash_hmac('sha256', $stringToSign, $appSecret);
+        $signRes      = hash_hmac('sha256', $stringToSign, $appSecret, true);
         $signRes      = base64_encode($signRes);
         Log::write([
             'stringToSign'   => $stringToSign,
