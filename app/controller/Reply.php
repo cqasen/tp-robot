@@ -23,21 +23,21 @@ class Reply extends BaseController
 
         $params = $this->is_json($raw_post_data) ? json_decode($raw_post_data, true) : [];
         Log::write($raw_post_data, 'notice', $params);
-        Log::write($_SERVER, 'notice');
+//        Log::write($_SERVER, 'notice');
         $appSecret = "zUm5-mqD6amYeykQRghfnqATwjpoYvoQTGYyvnIbb7b3uFHPYj6zAc1XARUnb2CV";
         //sign 与计算的结果不一致，则认为是非法的请求。
         $timestamp    = time() * 1000;
         $stringToSign = $timestamp . '\n' . $appSecret;
         $signRes      = hash_hmac('sha256', $stringToSign, $appSecret);
         $signRes      = base64_encode($signRes);
-        Log::write('', 'notice', [
+        Log::write([
             'stringToSign'   => $stringToSign,
             'signRes'        => $signRes,
             'HTTP_TIMESTAMP' => $_SERVER['HTTP_TIMESTAMP'],
             'HTTP_TOKEN'     => $_SERVER['HTTP_TOKEN'],
             'HTTP_SIGN'      => $_SERVER['HTTP_SIGN'],
             'time_diff'      => ($timestamp - $_SERVER['HTTP_TIMESTAMP']) / 3600,
-        ]);
+        ], 'notice');
 
         $s = '{
 	"conversationId": "cidCw9/y/XHOFrDYUrmJ90HfHEYGVSm7Zpv3Q435p+55rY=",
