@@ -29,6 +29,7 @@ class Reply extends BaseController
         $timestamp    = time() * 1000;
         $stringToSign = $timestamp . '\n' . $appSecret;
         $signRes      = hash_hmac('sha256', $stringToSign, $appSecret);
+        $signRes      = urlencode($signRes);
         $signRes      = base64_encode($signRes);
         Log::write([
             'stringToSign'   => $stringToSign,
