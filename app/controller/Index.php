@@ -85,8 +85,8 @@ class Index extends BaseController
 }
 EOF;
 
-        $msgParam = json_decode($jsonStr,true);
-        $req->msgParam = (string)json_encode($msgParam);
+        $req->msgParam = $msgParam;
+//        $req->msgParam = (string)json_encode($msgParam);
         DingtalkUtil::newInstance()->batchSend($req);
         return $this->responseJson();
     }
