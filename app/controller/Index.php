@@ -58,10 +58,34 @@ class Index extends BaseController
         foreach ($_SERVER as $key => $value) {
             $txt .= sprintf("> %s: %s \n\n", $key, $value);
         }
-        $msgParam      = [
+        $msgParam = [
             "title" => '有人请求了',
             "text"  => $txt . $raw_post_data . "[{$date}]",
         ];
+
+
+        $jsonStr = <<<EOF
+{
+    "msgtype": "actionCard",
+    "actionCard": {
+        "title": "乔布斯 20 年前想打造一间苹果咖啡厅，而它正是 Apple Store 的前身", 
+        "text": "![screenshot](https://img.alicdn.com/tfs/TB1NwmBEL9TBuNjy1zbXXXpepXa-2400-1218.png) \n\n #### 乔布斯 20 年前想打造的苹果咖啡厅 \n\n Apple Store 的设计正从原来满满的科技感走向生活化，而其生活化的走向其实可以追溯到 20 年前苹果一个建立咖啡馆的计划", 
+        "btnOrientation": "0", 
+        "btns": [
+            {
+                "title": "内容不错", 
+                "actionURL": "https://www.dingtalk.com/"
+            }, 
+            {
+                "title": "不感兴趣", 
+                "actionURL": "https://www.dingtalk.com/"
+            }
+        ]
+    }
+}
+EOF;
+
+        $msgParam = json_decode($jsonStr,true);
         $req->msgParam = (string)json_encode($msgParam);
         DingtalkUtil::newInstance()->batchSend($req);
         return $this->responseJson();
