@@ -51,7 +51,8 @@ class Index extends BaseController
 
         $req->robotCode = $robotCode;
         $req->userIds   = $userIds;    //通过手机号获取userId
-        $req->msgKey    = "officialMarkdownMsg";
+//        $req->msgKey    = "officialMarkdownMsg";
+        $req->msgKey    = "officialActionCardMsg";
         $date           = date('Y-m-d H:i:s');
         $raw_post_data  = file_get_contents('php://input', 'r');
         $txt            = '';
