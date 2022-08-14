@@ -10,6 +10,7 @@
 // +----------------------------------------------------------------------
 use think\facade\Route;
 
+Route::miss('Miss/index');
 Route::get('/', 'Index/index')->allowCrossDomain();
 Route::any('/reply', 'Reply/index')->allowCrossDomain();
 Route::get('/oss/sign', 'Oss/getSign')->allowCrossDomain();
