@@ -42,7 +42,7 @@ class Auth extends BaseController
             $decryptedData = $miniProgram->encryptor->decryptData($wxInfo['session_key'], $iv, $encryptedData);
         }
 
-        return $this->responseJson($decryptedData);
+        return $this->responseJson($wxInfo);
     }
 
 }
