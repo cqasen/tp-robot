@@ -21,8 +21,6 @@ class MiniProgramService extends \think\Service
             ],
         ];
 
-        print_r($config);
-
         $this->app->bind('miniProgram', Factory::miniProgram($config));
     }
 
