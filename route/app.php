@@ -13,3 +13,4 @@ use think\facade\Route;
 Route::get('/', 'Index/index')->allowCrossDomain();
 Route::any('/reply', 'Reply/index')->allowCrossDomain();
 Route::get('/oss/sign', 'Oss/getSign')->allowCrossDomain();
+Route::post('/auth/login', 'Auth/login')->allowCrossDomain();
