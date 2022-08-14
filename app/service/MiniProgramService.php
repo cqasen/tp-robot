@@ -20,8 +20,8 @@ class MiniProgramService extends \think\Service
                 'file' => __DIR__.'/wechat.log',
             ],
         ];
-
-        $this->app->bind('miniProgram', Factory::miniProgram($config));
+        $app = Factory::miniProgram($config);
+        $this->app->bind('miniProgram', $app);
     }
 
     public function boot(): void
